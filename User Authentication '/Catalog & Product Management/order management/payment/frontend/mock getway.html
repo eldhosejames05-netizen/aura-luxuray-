@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura Secure Payment Gateway</title>
+  <!-- Google Fonts & Icon Library -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-primary: #0a0b0d;
+      --bg-secondary: #13151a;
+      --bg-tertiary: #1b1e25;
+      --accent: #d4af37; /* Warm Gold */
+      --accent-hover: #b8962e;
+      --text-main: #f0f2f5;
+      --text-muted: #9ba1a6;
+      --success: #2ec4b6;
+      --error: #e63946;
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      --font: 'Outfit', sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+    .gateway-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Decorative Top Gold Bar */
+    .gateway-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--bg-secondary) 0%, var(--accent) 50%, var(--bg-secondary) 100%);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: 1.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 0.8rem;
+    }
+    .logo span {
+      color: var(--accent);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.4rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .order-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+    }
+    .order-row:last-child {
+      margin-bottom: 0;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .label {
+      color: var(--text-muted);
+    }
+    .value {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+    .total-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.3s ease;
+      border: none;
+      margin-bottom: 0.8rem;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-accent:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--error);
+      border-color: var(--error);
+      transform: translateY(-2px);
+    }
+    .secure-footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 1.8rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="gateway-container">
+    <div class="header">
+      <div class="logo">
+        <i class="fa-solid fa-cube"></i><span>AURA</span> LUXURY
+      </div>
+      <div class="badge">
+        <i class="fa-solid fa-shield-halved"></i> Secure Sandbox Gateway
+      </div>
+    </div>
+    <div class="order-card">
+      <div class="order-row">
+        <span class="label">Order reference</span>
+        <span class="value">#{{ order.id }}</span>
+      </div>
+      <div class="order-row">
+        <span class="label">Customer email</span>
+        <span class="value">{{ order.user.email }}</span>
+      </div>
+      <div class="order-row">
+        <span class="label">Shipping address</span>
+        <span class="value" style="text-align: right; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ order.shipping_address }}">
+          {{ order.shipping_address }}
+        </span>
+      </div>
+      <div class="order-row">
+        <span class="label">Order status</span>
+        <span class="value" style="color: var(--accent);">{{ order.status }}</span>
+      </div>
+      <div class="order-row">
+        <span class="label">Amount payable</span>
+        <span class="total-value">₹{{ order.total_amount }}</span>
+      </div>
+    </div>
+    <button class="btn btn-accent" onclick="processPayment('success')">
+      <i class="fa-solid fa-lock"></i> Authorize & Complete Payment
+    </button>
+    <button class="btn btn-outline" onclick="processPayment('cancel')">
+      Cancel Transaction
+    </button>
+    <div class="secure-footer">
+      <i class="fa-solid fa-lock" style="color: var(--success);"></i> 
+      SSL Encrypted 256-bit Connection | Powered by Stripe Simulation
+    </div>
+  </div>
+  <script>
+    function processPayment(status) {
+      const orderId = "{{ order.id }}";
+      if (status === 'success') {
+        // Redirect back to home with success status
+        window.location.href = `/?checkout_status=success&order_id=${orderId}&session_id=mock_cs_${orderId}`;
+      } else {
+        // Redirect back to home with cancel status
+        window.location.href = `/?checkout_status=cancel&order_id=${orderId}`;
+      }
+    }
+  </script>
+</body>
+</html>

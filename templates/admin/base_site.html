@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Aura Luxury Administration</a></h1>
+{% endblock %}
+
+{% block nav-global %}
+  <a href="{% url 'admin_sales_report_redirect' %}" style="display: inline-block; margin-top: 15px; margin-left: 20px; color: #ffc107; font-weight: bold; text-decoration: none; font-size: 14px; vertical-align: middle;">
+    📊 Sales Report Dashboard
+  </a>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Check if we are on the admin index home page by looking for the #content-related sidebar
+      var sidebar = document.getElementById("content-related");
+      if (sidebar) {
+        // Create a custom module container for our reports
+        var moduleDiv = document.createElement("div");
+        moduleDiv.className = "module";
+        moduleDiv.style.marginBottom = "20px";
+        moduleDiv.innerHTML = '<h2>Analytics Reports</h2><ul class="actionlist"><li style="list-style-type: none; padding: 5px 0;"><a href="{% url "admin_sales_report_redirect" %}" style="font-weight: bold; display: inline-flex; align-items: center; gap: 5px;">📊 View Sales Report Dashboard</a></li></ul>';
+        // Prepend it to the sidebar
+        sidebar.insertBefore(moduleDiv, sidebar.firstChild);
+      }
+    });
+  </script>
+{% endblock %}

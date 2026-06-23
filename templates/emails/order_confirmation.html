@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Confirmation - Aura Luxury</title>
+  <style>
+    body {
+      background-color: #0a0b0d;
+      color: #f0f2f5;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #13151a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .header {
+      background: linear-gradient(135deg, #13151a 0%, #1c1301 100%);
+      padding: 40px 30px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f0f2f5;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+    .logo span {
+      color: #d4af37;
+    }
+    .content {
+      padding: 40px 30px;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #2ec4b6; /* Success mint color */
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    .order-number {
+      color: #9ba1a6;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    p {
+      color: #9ba1a6;
+      font-size: 15px;
+      margin-bottom: 25px;
+    }
+    .receipt-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      font-size: 14px;
+      text-align: left;
+    }
+    .receipt-table th {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 5px;
+      color: #9ba1a6;
+      font-weight: 500;
+    }
+    .receipt-table td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 12px 5px;
+      color: #f0f2f5;
+    }
+    .summary-row td {
+      border: none;
+      padding: 6px 5px;
+    }
+    .summary-row.total td {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 15px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .shipping-box {
+      background-color: #1b1e25;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .shipping-box h2 {
+      color: #d4af37;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 0;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+    .shipping-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #f0f2f5;
+    }
+    .points-earned {
+      color: #d4af37;
+      font-weight: 600;
+    }
+    .footer {
+      padding: 30px;
+      background-color: #0a0b0d;
+      text-align: center;
+      font-size: 12px;
+      color: #5b6166;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .footer a {
+      color: #d4af37;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <div class="logo">AURA <span>LUXURY</span></div>
+    </div>
+    <div class="content">
+      <h1>Your order is successful and payment is also successful</h1>
+      <div class="order-number">Order ID: #{{ order.id }} &bull; Date: {{ order.created_at|date:"Y-m-d H:i" }}</div>
+      
+      <p>Dear {{ user.first_name|default:"Valued Customer" }},</p>
+      <p>Thank you for your purchase. Your payment has been processed and approved. Our logistics team is now preparing your express shipment.</p>
+      
+      <table class="receipt-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th style="text-align: center;">Qty</th>
+            <th style="text-align: right;">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order.items.all %}
+          <tr>
+            <td>{{ item.product.name|default:"Luxury Masterpiece" }}</td>
+            <td style="text-align: center;">{{ item.quantity }}</td>
+            <td style="text-align: right;">₹{{ item.price }}</td>
+          </tr>
+          {% endfor %}
+          <tr class="summary-row" style="height: 10px;">
+            <td colspan="3"></td>
+          </tr>
+          <tr class="summary-row">
+            <td colspan="2" style="color: #9ba1a6;">Subtotal</td>
+            <td style="text-align: right;">₹{{ order.total_amount }}</td>
+          </tr>
+          <tr class="summary-row">
+            <td colspan="2" style="color: #9ba1a6;">Shipping</td>
+            <td style="text-align: right; color: #2ec4b6;">Free Express</td>
+          </tr>
+          {% if points_earned > 0 %}
+          <tr class="summary-row">
+            <td colspan="2" style="color: #9ba1a6;">Loyalty Points Earned</td>
+            <td style="text-align: right; color: #d4af37; font-weight: 600;">+{{ points_earned }} Points</td>
+          </tr>
+          {% endif %}
+          <tr class="summary-row total">
+            <td colspan="2">Total paid</td>
+            <td style="text-align: right; color: #d4af37;">₹{{ order.total_amount }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="shipping-box">
+        <h2>Shipping Address</h2>
+        <p>{{ order.shipping_address }}</p>
+      </div>
+    </div>
+    <div class="footer">
+      &copy; 2026 Aura Luxury. All rights reserved.<br>
+      For questions about your order, please reply directly to this email or visit <a href="http://127.0.0.1:8000">auraluxury.com</a>.
+    </div>
+  </div>
+</body>
+</html>
