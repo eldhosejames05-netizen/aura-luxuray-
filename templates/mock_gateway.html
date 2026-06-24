@@ -245,11 +245,47 @@
       }
       
       const separator = returnUrl.includes('?') ? '&' : '?';
-      if (status === 'success') {
-        window.location.href = `${returnUrl}${separator}checkout_status=success&order_id=${orderId}&session_id=mock_cs_${orderId}_12345`;
-      } else {
-        window.location.href = `${returnUrl}${separator}checkout_status=cancel&order_id=${orderId}`;
+      const targetUrl = status === 'success' 
+        ? `${returnUrl}${separator}checkout_status=success&order_id=${orderId}&session_id=mock_cs_${orderId}_12345`
+        : `${returnUrl}${separator}checkout_status=cancel&order_id=${orderId}`;
+        
+      try {
+        if (returnUrl.startsWith('file:')) {
+          showManualRedirect(targetUrl);
+        } else {
+          window.location.href = targetUrl;
+        }
+      } catch (err) {
+        showManualRedirect(targetUrl);
       }
+    }
+
+    function showManualRedirect(url) {
+      const container = document.querySelector('.gateway-container');
+      container.innerHTML = `
+        <div class="header">
+          <div class="logo">
+            <i class="fa-solid fa-cube"></i><span>AURA</span> LUXURY
+          </div>
+          <div class="badge" style="border-color: var(--error); color: var(--error); background: rgba(230,57,70,0.1);">
+            <i class="fa-solid fa-triangle-exclamation"></i> Redirection Blocked
+          </div>
+        </div>
+        <div class="order-card" style="text-align: center;">
+          <p style="margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+            Browsers block secure websites from redirecting back to local files (<code>file:///</code>) on your computer.
+          </p>
+          <p style="font-weight: 500; margin-bottom: 1.5rem; color: var(--accent);">
+            Please click the button below to return manually:
+          </p>
+          <a class="btn btn-accent" href="${url}" style="text-decoration: none; color: #000; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600;">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Complete Checkout
+          </a>
+          <textarea readonly style="width: 100%; height: 75px; margin-top: 1.2rem; background: var(--bg-primary); border: 1px solid var(--border); color: var(--text-muted); border-radius: 8px; padding: 0.5rem; font-family: monospace; font-size: 0.8rem; resize: none; outline: none;" onclick="this.select()">${url}</textarea>
+          <small style="display: block; margin-top: 0.5rem; color: var(--text-muted);">If the button above does not work, copy and paste this link in your browser tab</small>
+        </div>
+        <a class="btn btn-outline" href="/" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">Go to Live Homepage</a>
+      `;
     }
   </script>
 </body>
