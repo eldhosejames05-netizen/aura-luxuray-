@@ -74,11 +74,26 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 # Database
 # If running on Render, store database file on the persistent mount disk at /data/db.sqlite3
+# Fallback to local BASE_DIR if /data is not writable (e.g., during the build phase)
 IS_RENDER = os.environ.get('RENDER', 'False').lower() in ('true', '1', 'yes')
+if IS_RENDER:
+    db_dir = Path('/data')
+    try:
+        db_dir.mkdir(parents=True, exist_ok=True)
+        # Verify write permissions by writing a temporary file
+        test_file = db_dir / '.test_write'
+        test_file.touch()
+        test_file.unlink()
+        DB_PATH = db_dir / 'db.sqlite3'
+    except (OSError, PermissionError):
+        DB_PATH = BASE_DIR / 'db.sqlite3'
+else:
+    DB_PATH = BASE_DIR / 'db.sqlite3'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/data/db.sqlite3' if IS_RENDER else BASE_DIR / 'db.sqlite3',
+        'NAME': DB_PATH,
     }
 }
 
