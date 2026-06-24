@@ -115,7 +115,10 @@ class CreateCheckoutSessionView(APIView):
                     checkout_url = session.url
                     session_id = session.id
                     stripe_session_created = True
-                except Exception:
+                except Exception as e:
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.exception(f"Stripe session creation failed: {e}")
                     stripe_session_created = False
 
             if not stripe_session_created:
@@ -186,7 +189,10 @@ class CreatePaymentIntentView(APIView):
                     payment_intent_id = intent.id
                     client_secret = intent.client_secret
                     stripe_intent_created = True
-                except Exception:
+                except Exception as e:
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.exception(f"Stripe intent creation failed: {e}")
                     stripe_intent_created = False
 
             if not stripe_intent_created:
