@@ -2530,12 +2530,12 @@
         if (response.ok) {
           isLiveBackend = true;
           document.getElementById('connection-banner').className = "banner";
-          document.getElementById('connection-banner').innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Live Local Server API Mode (http://127.0.0.1:8000)`;
+          document.getElementById('connection-banner').innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Live Server API Mode (${BASE_URL()})`;
         }
       } catch (e) {
         isLiveBackend = false;
         document.getElementById('connection-banner').className = "banner simulated";
-        document.getElementById('connection-banner').innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Offline Simulation Mode (Server on http://127.0.0.1:8000 not reachable)`;
+        document.getElementById('connection-banner').innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Offline Simulation Mode (Server on ${BASE_URL()} not reachable)`;
       }
     }
 
