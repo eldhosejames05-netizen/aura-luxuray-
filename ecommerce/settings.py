@@ -73,10 +73,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 # Database
+# If running on Render, store database file on the persistent mount disk at /data/db.sqlite3
+IS_RENDER = os.environ.get('RENDER', 'False').lower() in ('true', '1', 'yes')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': '/data/db.sqlite3' if IS_RENDER else BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -139,8 +141,8 @@ SIMPLE_JWT = {
 }
 
 # Stripe Configuration
-STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'pk_test_51ThQcND1GleGCuxnQlP3ugCKEkTebiM9kWZJgO0yLhR5R8LYqB2Zwru7swMe9r6sKqWTFlOX6AkjwEbNKjl95oqZ00tHT99MGm')
-STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_51ThQcND1GleGCuxn9ZZqqQn1sozoo6zxuoH3U5jvjdvc8vcOyk3TlhHC9YDBqgYjTXiBZgTEgH9Cvr1M9AoPetAD0089PU1596')
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', '')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
 MOCK_PAYMENT = os.environ.get('MOCK_PAYMENT', 'True').lower() in ('true', '1', 'yes')
 
 # CORS Configuration
@@ -174,9 +176,17 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = False
 
 
 
-# Run celery tasks synchronously during unit tests to avoid connection errors if Redis is not running
+# Run celery tasks synchronously if specified in env or during unit tests
 import sys
-if 'test' in sys.argv:
-    CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_ALWAYS_EAGER = os.environ.get('CELERY_TASK_ALWAYS_EAGER', 'False').lower() in ('true', '1', 'yes') or 'test' in sys.argv
+
+# CSRF Trusted Origins for local and Render deployments
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com', 'http://127.0.0.1:8000', 'http://localhost:8000']
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+]
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 

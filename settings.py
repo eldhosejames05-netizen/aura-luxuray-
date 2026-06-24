@@ -117,7 +117,7 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 }
 # Stripe Configuration
-STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'pk_test_51ThQcND1GleGCuxnQlP3ugCKEkTebiM9kWZJgO0yLhR5R8LYqB2Zwru7swMe9r6sKqWTFlOX6AkjwEbNKjl95oqZ00tHT99MGm')
-STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_51ThQcND1GleGCuxn9ZZqqQn1sozoo6zxuoH3U5jvjdvc8vcOyk3TlhHC9YDBqgYjTXiBZgTEgH9Cvr1M9AoPetAD0089PU1596')
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', '')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
 # CORS Configuration
 CORS_ALLOW_ALL_ORIGINS = True
